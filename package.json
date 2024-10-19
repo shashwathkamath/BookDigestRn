@@ -8,7 +8,8 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "d": "cd ios && pod deintegrate && pod install"
+    "d": "cd ios && pod deintegrate && pod install",
+    "n": "rm -rf node_modules"
   },
   "dependencies": {
     "@react-native-google-signin/google-signin": "^13.1.0",
