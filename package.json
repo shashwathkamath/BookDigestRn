@@ -9,9 +9,10 @@
     "start": "react-native start",
     "test": "jest",
     "d": "cd ios && pod deintegrate && pod install",
-    "n": "rm -rf node_modules"
+    "n": "rm -rf node_modules && yarn install"
   },
   "dependencies": {
+    "@react-native-firebase/app": "^21.0.0",
     "@react-native-google-signin/google-signin": "^13.1.0",
     "nvm": "^0.0.4",
     "react": "18.3.1",
