@@ -1,4 +1,4 @@
-package com.bookdigest
+package com.kamath.bookdigest
 
 import android.app.Application
 import com.facebook.react.PackageList
