@@ -1,18 +1,13 @@
-
+import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import {
-  SafeAreaView
-} from 'react-native';
-import SignInScreen from './screens/signInScreen/signInScreen';
+import MainScreen from './screens/main/MainScreen';
 
 function App(): React.JSX.Element {
   return (
-    <SafeAreaView >
-      <SignInScreen />
-    </SafeAreaView>
+    <NavigationContainer>
+      <MainScreen />
+    </NavigationContainer>
   );
 }
-
-
 
 export default App;
