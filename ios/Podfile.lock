@@ -1628,6 +1628,27 @@ PODS:
   - RNFBApp (21.0.0):
     - Firebase/CoreOnly (= 11.2.0)
     - React-Core
+  - RNGestureHandler (2.20.2):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNGoogleSignin (13.1.0):
     - GoogleSignIn (~> 7.1)
     - React-Core
@@ -1758,6 +1779,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -1914,6 +1936,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-picker/picker"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
   RNGoogleSignin:
     :path: "../node_modules/@react-native-google-signin/google-signin"
   RNPermissions:
@@ -2006,6 +2030,7 @@ SPEC CHECKSUMS:
   ReactCommon: 1007c09a406a451ddbd874e51511aa541d6034f6
   RNCPicker: f963e01f78e546a93b98aa201501713dbda14e94
   RNFBApp: 4122dd41d8d7ff017b6ecf777a6224f5b349ca04
+  RNGestureHandler: 4b397b156d173028ff97960b5ebacfbb21232081
   RNGoogleSignin: 9e68b9bcc3888219357924e32ee563624745647d
   RNPermissions: 5c05d8106720987a2171efdcd47d79ceeb6b7d74
   RNScreens: de55b9d7de8a017d1588dcb70415492d0b0597c2
