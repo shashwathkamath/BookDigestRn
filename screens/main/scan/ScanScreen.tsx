@@ -1,15 +1,16 @@
 import { useIsFocused } from '@react-navigation/native';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, Button, StyleSheet, Text, View } from 'react-native';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
 
 const ScanScreen = () => {
     const [isbn, setIsbn] = useState<string | null>(null);
     const [bookDetails, setBookDetails] = useState<any | null>(null);
     const [loading, setLoading] = useState(false);
-    const isFocused = useIsFocused(); // To check if the screen is focused
-    const device = useCameraDevice('back'); // Access the back camera
+    const [enableScanning, setEnableScanning] = useState(true);
+    const isFocused = useIsFocused();
+    const device = useCameraDevice('back');
 
     useEffect(() => {
         (async () => {
@@ -20,8 +21,8 @@ const ScanScreen = () => {
         })();
     }, []);
 
-    const handleBarcodeScanned = async (scannedIsbn: string) => {
-        if (!scannedIsbn || scannedIsbn === isbn) return; // Prevent redundant scans
+    const handleBarcodeScanned = useCallback(async (scannedIsbn: string) => {
+        if (!scannedIsbn || scannedIsbn === isbn) return;
 
         setIsbn(scannedIsbn);
         setLoading(true);
@@ -35,20 +36,31 @@ const ScanScreen = () => {
             setBookDetails(response.data.book);
         } catch (error) {
             console.error('Failed to fetch book details:', error);
+            setBookDetails(null);
         } finally {
             setLoading(false);
         }
+    }, [isbn]);
+
+    const codeScanner = useCodeScanner({
+        codeTypes: ['ean-13'],
+        onCodeScanned: (codes) => {
+            if (enableScanning && codes.length > 0) {
+                const scannedIsbn = codes[0]?.value;
+                if (scannedIsbn) {
+                    setEnableScanning(false);
+                    handleBarcodeScanned(scannedIsbn);
+                }
+            }
+        },
+    });
+
+    const resetScan = () => {
+        setIsbn(null);
+        setBookDetails(null);
+        setEnableScanning(true);
     };
 
-    // Configure the useCodeScanner hook
-    // const codeScanner = useCodeScanner({
-    //     codeTypes: ['ean-13', 'qr'], // Include EAN-13 for ISBNs
-    //     onCodeScanned: (codes) => {
-    //         console.log("Codes", codes);
-    //     }
-    // });
-
-    // Check if permissions are not granted or device is not ready
     if (!device) {
         return <ActivityIndicator size="large" color="#0000ff" />;
     }
@@ -63,7 +75,7 @@ const ScanScreen = () => {
                             style={StyleSheet.absoluteFill}
                             device={device}
                             isActive={true}
-                        //codeScanner={codeScanner} // Attach the codeScanner directly to the Camera
+                            codeScanner={codeScanner}
                         />
                     )}
                 </>
@@ -75,6 +87,7 @@ const ScanScreen = () => {
                     <Text>Author: {bookDetails?.authors?.join(', ') || 'Unknown'}</Text>
                     <Text>Publisher: {bookDetails?.publisher || 'Unknown'}</Text>
                     <Text>Pages: {bookDetails?.pages || 'Unknown'}</Text>
+                    <Button title="Scan Another Book" onPress={resetScan} />
                 </View>
             )}
         </View>
@@ -85,7 +98,7 @@ const styles = StyleSheet.create({
     container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
     instructions: { fontSize: 16, marginBottom: 20 },
     bookDetails: { alignItems: 'center', padding: 20 },
-    bookTitle: { fontSize: 18, fontWeight: 'bold' },
+    bookTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
 });
 
 export default ScanScreen;
