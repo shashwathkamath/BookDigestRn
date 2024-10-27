@@ -1,6 +1,6 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useRef, useState } from 'react';
-import { Animated, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Animated, Image, Keyboard, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { RootStackParamList } from '../../../App';
 
@@ -9,61 +9,74 @@ const beeImage = require('../../assets/images/image.png');
 const profileImage = require('../../assets/images/pp.png');
 type navigationProp = NavigationProp<RootStackParamList, 'Main'>;
 
-const TopBarHeader = ({ }) => {
+const TopBarHeader = () => {
     const [isSearchActive, setIsSearchActive] = useState(false);
-    const searchWidth = useRef(new Animated.Value(40)).current;
+    const [searchQuery, setSearchQuery] = useState(''); // State to hold search query
+    const searchWidth = useRef(new Animated.Value(0)).current;
     const navigation = useNavigation<navigationProp>();
 
     const handleSearchPress = () => {
         if (isSearchActive) {
             Animated.timing(searchWidth, {
-                toValue: 40,
+                toValue: 0,
                 duration: 300,
                 useNativeDriver: false,
             }).start(() => setIsSearchActive(false));
         } else {
             setIsSearchActive(true);
             Animated.timing(searchWidth, {
-                toValue: 260,
+                toValue: 200, // Adjust the width based on your design
                 duration: 300,
                 useNativeDriver: false,
             }).start();
         }
     };
 
-    const closeSearch = () => {
-        Animated.timing(searchWidth, {
-            toValue: 40,
-            duration: 300,
-            useNativeDriver: false,
-        }).start(() => setIsSearchActive(false));
+    const handleSearchSubmit = () => {
+        // Implement your search logic here
+        console.log('Searching for:', searchQuery);
+
+        // Optionally hide the keyboard after submission
+        Keyboard.dismiss();
     };
 
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.headerContainer}>
-                {isSearchActive ? (
-                    <Image source={beeImage} style={styles.headerIcon} />
-                ) : (
-                    <Text style={styles.headerTitle}>BookB</Text>
-                )}
+                {/* Left Container - App Name or Icon */}
+                <View style={styles.leftContainer}>
+                    {!isSearchActive ? (
+                        <Text style={styles.headerTitle}>BookB</Text>
+                    ) : (
+                        <Image source={beeImage} style={styles.headerIcon} />
+                    )}
+                </View>
+
+                {/* Right Container - Search and Profile Icons */}
                 <View style={styles.rightContainer}>
+                    {/* Search Bar */}
                     {isSearchActive && (
                         <Animated.View style={[styles.searchBar, { width: searchWidth }]}>
                             <TextInput
                                 placeholder="Search..."
                                 style={styles.searchInput}
                                 autoFocus
+                                value={searchQuery}
+                                onChangeText={setSearchQuery}
+                                onSubmitEditing={handleSearchSubmit} // Trigger search on "return" key press
+                                returnKeyType="search" // Changes the return key text to "Search" (optional)
                             />
-                            <TouchableOpacity onPress={closeSearch} style={styles.closeButton}>
-                                <Icon name="times" size={16} color="#666" />
-                            </TouchableOpacity>
                         </Animated.View>
                     )}
+
+                    {/* Search Icon Button */}
                     <TouchableOpacity style={styles.searchButton} onPress={handleSearchPress}>
-                        <Icon name="search" size={24} color="#000" />
+                        <Icon name={isSearchActive ? "times" : "search"} size={20} color="#A8E6CF" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.profileIcon}
+
+                    {/* Profile Icon */}
+                    <TouchableOpacity
+                        style={styles.profileIcon}
                         onPress={() => navigation.navigate('Account')}
                     >
                         <Image
@@ -89,10 +102,13 @@ const styles = StyleSheet.create({
         height: 60,
         backgroundColor: '#fff',
     },
+    leftContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     headerTitle: {
         fontSize: 18,
         fontWeight: 'bold',
-        flex: 1,
         textAlign: 'left',
         color: '#A8E6CF',
         textShadowColor: '#333333',
@@ -106,6 +122,8 @@ const styles = StyleSheet.create({
     rightContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'flex-end',
+        flex: 1,
     },
     searchButton: {
         padding: 8,
@@ -122,18 +140,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: '#ccc',
+        borderColor: '#A8E6CF',
         borderRadius: 8,
         paddingHorizontal: 8,
         height: 40,
         marginRight: 10,
-        marginLeft: 8,
     },
     searchInput: {
         flex: 1,
-    },
-    closeButton: {
-        padding: 4,
     },
 });
 
