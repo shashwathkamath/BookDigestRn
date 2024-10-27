@@ -19,6 +19,8 @@ target 'BookB' do
      pod 'Firebase', :modular_headers => true
      pod 'FirebaseCore', :modular_headers => true
      pod 'GoogleUtilities', :modular_headers => true
+     pod 'GTMSessionFetcher/Core', '~> 3.3'
+pod 'GoogleUtilities/UserDefaults', '~> 8.0'
      use_frameworks! :linkage => :static
      $RNFirebaseAsStaticFramework = true
   use_react_native!(
