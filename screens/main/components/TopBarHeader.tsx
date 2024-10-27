@@ -1,14 +1,18 @@
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useRef, useState } from 'react';
 import { Animated, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { RootStackParamList } from '../../../App';
 
 // Importing the image
 const beeImage = require('../../assets/images/image.png');
 const profileImage = require('../../assets/images/pp.png');
+type navigationProp = NavigationProp<RootStackParamList, 'Main'>;
 
 const TopBarHeader = ({ }) => {
     const [isSearchActive, setIsSearchActive] = useState(false);
     const searchWidth = useRef(new Animated.Value(40)).current;
+    const navigation = useNavigation<navigationProp>();
 
     const handleSearchPress = () => {
         if (isSearchActive) {
@@ -27,6 +31,14 @@ const TopBarHeader = ({ }) => {
         }
     };
 
+    const closeSearch = () => {
+        Animated.timing(searchWidth, {
+            toValue: 40,
+            duration: 300,
+            useNativeDriver: false,
+        }).start(() => setIsSearchActive(false));
+    };
+
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.headerContainer}>
@@ -42,14 +54,18 @@ const TopBarHeader = ({ }) => {
                                 placeholder="Search..."
                                 style={styles.searchInput}
                                 autoFocus
-                                onBlur={handleSearchPress}
                             />
+                            <TouchableOpacity onPress={closeSearch} style={styles.closeButton}>
+                                <Icon name="times" size={16} color="#666" />
+                            </TouchableOpacity>
                         </Animated.View>
                     )}
                     <TouchableOpacity style={styles.searchButton} onPress={handleSearchPress}>
                         <Icon name="search" size={24} color="#000" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.profileIcon}>
+                    <TouchableOpacity style={styles.profileIcon}
+                        onPress={() => navigation.navigate('Account')}
+                    >
                         <Image
                             source={profileImage} // Replace with your image URL
                             style={styles.image}
@@ -111,10 +127,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         height: 40,
         marginRight: 10,
-        marginLeft: 8
+        marginLeft: 8,
     },
     searchInput: {
         flex: 1,
+    },
+    closeButton: {
+        padding: 4,
     },
 });
 
