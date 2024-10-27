@@ -12,6 +12,7 @@ const ScanScreen = () => {
     const [loading, setLoading] = useState(false);
     const [enableScanning, setEnableScanning] = useState(true);
     const [bookDescription, setBookDescription] = useState<string>(''); // State for book description
+    const [listingPrice, setListingPrice] = useState<string>(''); // State for listing price
     const isFocused = useIsFocused();
     const device = useCameraDevice('back');
 
@@ -62,6 +63,7 @@ const ScanScreen = () => {
         setIsbn(null);
         setBookDetails(null);
         setBookDescription(''); // Reset the book description
+        setListingPrice(''); // Reset the listing price
         setEnableScanning(true);
     };
 
@@ -71,7 +73,15 @@ const ScanScreen = () => {
             isbn,
             bookDetails,
             description: bookDescription,
+            price: listingPrice,
         });
+    };
+
+    const handleListingPriceChange = (value: string) => {
+        // Allow only 4 digits
+        if (/^\d{0,4}$/.test(value)) {
+            setListingPrice(value);
+        }
     };
 
     if (!device) {
@@ -104,6 +114,7 @@ const ScanScreen = () => {
                             { key: 'Author', value: bookDetails?.authors?.join(', ') || 'Unknown' },
                             { key: 'Publisher', value: bookDetails?.publisher || 'Unknown' },
                             { key: 'Pages', value: bookDetails?.pages || 'Unknown' },
+                            { key: 'Market Price', value: bookDetails?.msrp || 'Not Available' },
                         ]}
                         renderItem={({ item }) => (
                             <View style={styles.detailRow}>
@@ -113,6 +124,17 @@ const ScanScreen = () => {
                         )}
                         ListFooterComponent={() => (
                             <>
+                                <View style={styles.detailRow}>
+                                    <Text style={styles.detailKey}>Listing Price:</Text>
+                                    <TextInput
+                                        style={[styles.textInput, styles.listingPriceInput]}
+                                        placeholder="Enter price"
+                                        value={listingPrice}
+                                        onChangeText={handleListingPriceChange}
+                                        keyboardType="numeric"
+                                        maxLength={4}
+                                    />
+                                </View>
                                 <View style={styles.descriptionContainer}>
                                     <Text style={styles.descriptionLabel}>Describe Book Condition:</Text>
                                     <TextInput
@@ -159,12 +181,13 @@ const styles = StyleSheet.create({
     },
     detailRow: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginVertical: 8,
+        alignItems: 'center', // Center items vertically
+        marginVertical: 4, // Adjusted to reduce vertical spacing
     },
     detailKey: {
         fontWeight: 'bold',
         flex: 1,
+        marginRight: 5
     },
     detailValue: {
         flexShrink: 1,
@@ -183,8 +206,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         borderRadius: 8,
-        height: 100,
-        textAlignVertical: 'top', // Ensures text starts at the top
+        height: 35, marginRight: 150,
+        textAlignVertical: 'top',
+    },
+    listingPriceInput: {
+        width: 80, // Adjust width to fit 4-digit input
+        textAlign: 'center',
     },
     buttonContainer: {
         flexDirection: 'row',
