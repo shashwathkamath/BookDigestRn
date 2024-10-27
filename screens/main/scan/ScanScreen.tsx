@@ -1,14 +1,17 @@
 import { useIsFocused } from '@react-navigation/native';
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Button, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Button, Dimensions, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
+
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const ScanScreen = () => {
     const [isbn, setIsbn] = useState<string | null>(null);
     const [bookDetails, setBookDetails] = useState<any | null>(null);
     const [loading, setLoading] = useState(false);
     const [enableScanning, setEnableScanning] = useState(true);
+    const [bookDescription, setBookDescription] = useState<string>(''); // State for book description
     const isFocused = useIsFocused();
     const device = useCameraDevice('back');
 
@@ -58,7 +61,17 @@ const ScanScreen = () => {
     const resetScan = () => {
         setIsbn(null);
         setBookDetails(null);
+        setBookDescription(''); // Reset the book description
         setEnableScanning(true);
+    };
+
+    const postBookDetails = () => {
+        // Function to handle posting book details to the server or performing an action
+        console.log('Book details posted:', {
+            isbn,
+            bookDetails,
+            description: bookDescription,
+        });
     };
 
     if (!device) {
@@ -69,25 +82,55 @@ const ScanScreen = () => {
         <View style={styles.container}>
             {!isbn ? (
                 <>
-                    <Text style={styles.instructions}>Scan the ISBN of the book</Text>
-                    {isFocused && (
-                        <Camera
-                            style={StyleSheet.absoluteFill}
-                            device={device}
-                            isActive={true}
-                            codeScanner={codeScanner}
-                        />
-                    )}
+                    <View style={styles.cameraContainer}>
+                        <Text style={styles.instructions}>Scan the ISBN of the book</Text>
+                        {isFocused && (
+                            <Camera
+                                style={styles.camera}
+                                device={device}
+                                isActive={true}
+                                codeScanner={codeScanner}
+                            />
+                        )}
+                    </View>
                 </>
             ) : loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />
             ) : (
-                <View style={styles.bookDetails}>
-                    <Text style={styles.bookTitle}>{bookDetails?.title || 'Book not found'}</Text>
-                    <Text>Author: {bookDetails?.authors?.join(', ') || 'Unknown'}</Text>
-                    <Text>Publisher: {bookDetails?.publisher || 'Unknown'}</Text>
-                    <Text>Pages: {bookDetails?.pages || 'Unknown'}</Text>
-                    <Button title="Scan Another Book" onPress={resetScan} />
+                <View style={styles.bookDetailsContainer}>
+                    <FlatList
+                        data={[
+                            { key: 'Title', value: bookDetails?.title || 'Book not found' },
+                            { key: 'Author', value: bookDetails?.authors?.join(', ') || 'Unknown' },
+                            { key: 'Publisher', value: bookDetails?.publisher || 'Unknown' },
+                            { key: 'Pages', value: bookDetails?.pages || 'Unknown' },
+                        ]}
+                        renderItem={({ item }) => (
+                            <View style={styles.detailRow}>
+                                <Text style={styles.detailKey}>{item.key}:</Text>
+                                <Text style={styles.detailValue}>{item.value}</Text>
+                            </View>
+                        )}
+                        ListFooterComponent={() => (
+                            <>
+                                <View style={styles.descriptionContainer}>
+                                    <Text style={styles.descriptionLabel}>Describe Book Condition:</Text>
+                                    <TextInput
+                                        style={styles.textInput}
+                                        placeholder="e.g., Torn pages, folded cover, markings"
+                                        value={bookDescription}
+                                        onChangeText={setBookDescription}
+                                        multiline
+                                        numberOfLines={4}
+                                    />
+                                </View>
+                                <View style={styles.buttonContainer}>
+                                    <Button title="Scan Another Book" onPress={resetScan} />
+                                    <Button title="Post" onPress={postBookDetails} />
+                                </View>
+                            </>
+                        )}
+                    />
                 </View>
             )}
         </View>
@@ -95,10 +138,59 @@ const ScanScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-    instructions: { fontSize: 16, marginBottom: 20 },
-    bookDetails: { alignItems: 'center', padding: 20 },
-    bookTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
+    container: { flex: 1 },
+    cameraContainer: {
+        height: SCREEN_HEIGHT * 0.2, // 20% of the screen height
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f0f0f0',
+    },
+    camera: {
+        ...StyleSheet.absoluteFillObject,
+    },
+    instructions: {
+        fontSize: 16,
+        marginBottom: 10,
+    },
+    bookDetailsContainer: {
+        flex: 1,
+        padding: 20,
+        justifyContent: 'center',
+    },
+    detailRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginVertical: 8,
+    },
+    detailKey: {
+        fontWeight: 'bold',
+        flex: 1,
+    },
+    detailValue: {
+        flexShrink: 1,
+        flex: 2,
+    },
+    descriptionContainer: {
+        marginTop: 20,
+    },
+    descriptionLabel: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        marginBottom: 10,
+    },
+    textInput: {
+        borderColor: '#ccc',
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 8,
+        height: 100,
+        textAlignVertical: 'top', // Ensures text starts at the top
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 20,
+    },
 });
 
 export default ScanScreen;
