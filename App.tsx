@@ -23,7 +23,10 @@ function App(): React.JSX.Element {
         <Stack.Screen
           name="Account"
           component={AccountScreen}
-          options={{ title: 'My Account' }} // Customize header for AccountScreen
+          options={{
+            title: 'My Account',
+            headerBackTitle: 'Home'
+          }} // Customize header for AccountScreen
         />
       </Stack.Navigator>
     </NavigationContainer>
