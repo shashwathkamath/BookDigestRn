@@ -18,7 +18,7 @@ function App(): React.JSX.Element {
         <Stack.Screen
           name="Main"
           component={MainScreen}
-          options={{ headerShown: false }} // Hide the default header
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Account"
@@ -26,7 +26,7 @@ function App(): React.JSX.Element {
           options={{
             title: 'My Account',
             headerBackTitle: 'Home'
-          }} // Customize header for AccountScreen
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
