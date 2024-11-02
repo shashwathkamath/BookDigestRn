@@ -1,10 +1,14 @@
-interface Book {
+export interface Book {
     _id: string;
     title: string;
     author: string;
-    genre: string;
-    pages: number;
-    publishedDate: Date;
     description: string;
-    // Add other fields as necessary
+    imageUrl: string;
+    sellerName: string;
+    sellerReviews: number;
+    marketPrice: number;
+    sellingPrice: number;
+    pages: number;
+    language: string;
+    publisher: string;
 }
