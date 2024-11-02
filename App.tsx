@@ -1,8 +1,8 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import MainScreen from './screens/main/MainScreen'; // Your main tab screen
-import AccountScreen from './screens/main/account/AccountScreen'; // The Account/Preferences screen
+import MainScreen from './screens/main/MainScreen';
+import AccountScreen from './screens/main/account/AccountScreen';
 import BookDescription from './screens/main/home/bookDescription/BookDescription';
 import { RootStackParamList } from './screens/main/types/RootStackParamList';
 
