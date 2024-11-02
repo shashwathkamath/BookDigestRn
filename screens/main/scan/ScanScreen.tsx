@@ -11,8 +11,9 @@ const ScanScreen = () => {
     const [bookDetails, setBookDetails] = useState<any | null>(null);
     const [loading, setLoading] = useState(false);
     const [enableScanning, setEnableScanning] = useState(true);
-    const [bookDescription, setBookDescription] = useState<string>(''); // State for book description
-    const [listingPrice, setListingPrice] = useState<string>(''); // State for listing price
+    const [bookDescription, setBookDescription] = useState<string>('');
+    const [listingPrice, setListingPrice] = useState<string>('');
+    const [capturedImages, setCapturedImages] = useState<string[]>([]); // State to store image URIs
     const isFocused = useIsFocused();
     const device = useCameraDevice('back');
 
@@ -62,26 +63,37 @@ const ScanScreen = () => {
     const resetScan = () => {
         setIsbn(null);
         setBookDetails(null);
-        setBookDescription(''); // Reset the book description
-        setListingPrice(''); // Reset the listing price
+        setBookDescription('');
+        setListingPrice('');
+        setCapturedImages([]); // Reset captured images
         setEnableScanning(true);
     };
 
     const postBookDetails = () => {
-        // Function to handle posting book details to the server or performing an action
         console.log('Book details posted:', {
             isbn,
             bookDetails,
             description: bookDescription,
             price: listingPrice,
+            images: capturedImages,
         });
     };
 
     const handleListingPriceChange = (value: string) => {
-        // Allow only 4 digits
         if (/^\d{0,4}$/.test(value)) {
             setListingPrice(value);
         }
+    };
+
+    // Function to open the camera and capture images from four angles
+    const captureImages = async () => {
+        // Implement camera capture logic
+        // This is a placeholder and should be replaced with your image capture code
+        const images: string[] = []; // Array to store captured image URIs
+
+        // TODO: Capture images for front, back, and both sides
+        console.log('Capture images from 4 angles');
+        setCapturedImages(images);
     };
 
     if (!device) {
@@ -146,6 +158,11 @@ const ScanScreen = () => {
                                         numberOfLines={4}
                                     />
                                 </View>
+                                <Button
+                                    title="Take Photos of Book (4 Angles)"
+                                    onPress={captureImages}
+                                    color="#007BFF"
+                                />
                                 <View style={styles.buttonContainer}>
                                     <Button title="Scan Another Book" onPress={resetScan} />
                                     <Button title="Post" onPress={postBookDetails} />
@@ -181,13 +198,13 @@ const styles = StyleSheet.create({
     },
     detailRow: {
         flexDirection: 'row',
-        alignItems: 'center', // Center items vertically
-        marginVertical: 4, // Adjusted to reduce vertical spacing
+        alignItems: 'center',
+        marginVertical: 4,
     },
     detailKey: {
         fontWeight: 'bold',
         flex: 1,
-        marginRight: 5
+        marginRight: 5,
     },
     detailValue: {
         flexShrink: 1,
@@ -206,12 +223,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         borderRadius: 8,
-        height: 35, marginRight: 150,
         textAlignVertical: 'top',
     },
     listingPriceInput: {
-        width: 80, // Adjust width to fit 4-digit input
+        width: 80,
         textAlign: 'center',
+        marginRight: 150
     },
     buttonContainer: {
         flexDirection: 'row',
