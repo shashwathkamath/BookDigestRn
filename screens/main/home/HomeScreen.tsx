@@ -8,7 +8,7 @@ const HomeScreen = () => {
     const [books, setBooks] = useState<Book[]>([]);
     const [loading, setLoading] = useState(true);
     const navigation = useNavigation<NavigationProp>();
-    const BASE_URL = 'https://9776-2600-1001-a00b-9a64-e153-7b62-b22f-a28a.ngrok-free.app';
+    const BASE_URL = 'https://e873-2600-1001-a00b-9a64-f47e-c3cf-d4dc-86b5.ngrok-free.app';
 
     const fetchBooks = async () => {
         try {
