@@ -1,13 +1,13 @@
+import { GOOGLE_CLIENT_ID } from '@env';
 import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin";
 import React from "react";
 import { Button, StyleSheet, View } from "react-native";
+import { User } from "../main/types/User";
 
 const SignInScreen: React.FC = () => {
     React.useEffect(() => {
         GoogleSignin.configure({
-            webClientId: 'YOUR_FIREBASE_WEB_CLIENT_ID', // Replace with your Firebase Web Client ID
-            offlineAccess: true,
-            scopes: ['profile', 'email'],
+            webClientId: GOOGLE_CLIENT_ID
         });
     }, []);
 
@@ -18,22 +18,21 @@ const SignInScreen: React.FC = () => {
 
             // Initiate the sign-in process
             const result = await GoogleSignin.signIn();
+            console.log("result user", result.data?.user);
+            const user = result.data?.user;
+            //sending the user to db
+            if (user && user.id && user.email) {
+                const userDetails: User = {
+                    photo: user.photo ?? undefined,
+                    givenName: user.givenName ?? '',
+                    familyName: user.familyName ?? '',
+                    name: user.name ?? '',
+                    email: user.email,
+                    id: user.id,
+                };
+                await sendUserDetailsToDb(userDetails);
+            }
 
-            // Extract the ID token
-            console.log("result", result)
-            // if (!idToken) {
-            //     throw new Error("ID token is not available.");
-            // }
-
-            // // Create a Firebase credential with the Google ID token
-            // const googleCredential = GoogleAuthProvider.credential(idToken);
-
-            // // Sign in to Firebase with the credential
-            // const userCredential = await signInWithCredential(auth, googleCredential);
-            // console.log("User Info: ", userCredential.user);
-
-            // Optional: Show user information
-            //Alert.alert("Welcome", `Signed in as ${userCredential.user.displayName}`);
         } catch (error: unknown) {
             if (error instanceof Error) {
                 if ((error as any).code === statusCodes.SIGN_IN_CANCELLED) {
@@ -48,6 +47,10 @@ const SignInScreen: React.FC = () => {
             }
         }
     };
+
+    const sendUserDetailsToDb = async (user: User) => {
+
+    }
 
     return (
         <View style={styles.container}>
