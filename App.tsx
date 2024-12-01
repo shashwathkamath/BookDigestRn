@@ -2,6 +2,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { RecoilRoot } from 'recoil';
 import { RootStackParamList } from './screens/main/types/RootStackParamList';
 import SignInScreen from './screens/signInScreen/signInScreen';
 
@@ -10,9 +11,12 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 function App(): React.JSX.Element {
   return (
-    <SafeAreaView style={styles.container}>
-      <SignInScreen />
-    </SafeAreaView>
+    <RecoilRoot>
+      <SafeAreaView style={styles.container}>
+        <SignInScreen />
+      </SafeAreaView>
+    </RecoilRoot>
+
 
     // <NavigationContainer>
     //   <Stack.Navigator>

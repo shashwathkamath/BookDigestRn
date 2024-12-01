@@ -1,10 +1,15 @@
 import { GOOGLE_CLIENT_ID } from '@env';
-import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import React from "react";
-import { Button, StyleSheet, View } from "react-native";
-import { User } from "../main/types/User";
+import { Button, StyleSheet, Text, View } from "react-native";
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { userAtom } from '../main/atoms/userAtom';
+import { signInSelector } from '../main/atoms/userSelectors';
 
 const SignInScreen: React.FC = () => {
+    const user = useRecoilValue(userAtom);
+    const setSignInState = useSetRecoilState(signInSelector);
+
     React.useEffect(() => {
         GoogleSignin.configure({
             webClientId: GOOGLE_CLIENT_ID
@@ -12,49 +17,13 @@ const SignInScreen: React.FC = () => {
     }, []);
 
     const signIn = async (): Promise<void> => {
-        try {
-            // Ensure Google Play Services are available
-            await GoogleSignin.hasPlayServices();
-
-            // Initiate the sign-in process
-            const result = await GoogleSignin.signIn();
-            console.log("result user", result.data?.user);
-            const user = result.data?.user;
-            //sending the user to db
-            if (user && user.id && user.email) {
-                const userDetails: User = {
-                    photo: user.photo ?? undefined,
-                    givenName: user.givenName ?? '',
-                    familyName: user.familyName ?? '',
-                    name: user.name ?? '',
-                    email: user.email,
-                    id: user.id,
-                };
-                await sendUserDetailsToDb(userDetails);
-            }
-
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                if ((error as any).code === statusCodes.SIGN_IN_CANCELLED) {
-                    console.log("User cancelled the sign-in process.");
-                } else if ((error as any).code === statusCodes.IN_PROGRESS) {
-                    console.log("Sign-in is already in progress.");
-                } else if ((error as any).code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-                    console.log("Google Play Services not available.");
-                } else {
-                    console.error("An unexpected error occurred during sign-in: ", error);
-                }
-            }
-        }
+        setSignInState(null);
     };
-
-    const sendUserDetailsToDb = async (user: User) => {
-
-    }
 
     return (
         <View style={styles.container}>
             <Button title="Sign in with Google" onPress={signIn} />
+            {user && <Text>Welcome, {user.name}!</Text>}
         </View>
     );
 };
@@ -64,7 +33,9 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: 'white'
     },
+
 });
 
 export default SignInScreen;
