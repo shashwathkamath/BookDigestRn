@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: 'white'
     },
-
 });
 
 export default SignInScreen;
