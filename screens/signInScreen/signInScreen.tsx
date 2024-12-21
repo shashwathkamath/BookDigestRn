@@ -1,29 +1,38 @@
 import { GOOGLE_CLIENT_ID } from '@env';
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { userAtom } from '../main/atoms/userAtom';
-import { signInSelector } from '../main/atoms/userSelectors';
+import { useRecoilState, useRecoilValue } from "recoil";
+import { UserAtom } from '../main/atoms/UserAtom';
+import { signInSelector } from "../main/atoms/UserSelectors";
+import { signInWithGoogle } from "./SignInWithGoogle";
 
 const SignInScreen: React.FC = () => {
-    const user = useRecoilValue(userAtom);
-    const setSignInState = useSetRecoilState(signInSelector);
+    const [user, setUser] = useRecoilState(UserAtom); // Update directly using the atom
+    const currentUser = useRecoilValue(signInSelector); // Read derived state (if needed)
 
-    React.useEffect(() => {
+    useEffect(() => {
         GoogleSignin.configure({
-            webClientId: GOOGLE_CLIENT_ID
+            webClientId: GOOGLE_CLIENT_ID, // Update with your Web Client ID
         });
     }, []);
 
-    const signIn = async (): Promise<void> => {
-        setSignInState(null);
+    useEffect(() => {
+        console.log("User --> ", user);
+    }, [user]);
+
+    const handleSignIn = async () => {
+        await signInWithGoogle(setUser);
     };
 
     return (
         <View style={styles.container}>
-            <Button title="Sign in with Google" onPress={signIn} />
-            {user && <Text>Welcome, {user.name}!</Text>}
+            <Button title="Sign in with Google" onPress={handleSignIn} />
+            {currentUser ? (
+                <Text style={styles.welcomeText}>Welcome, {currentUser.name}!</Text>
+            ) : (
+                <Text style={styles.welcomeText}>Please sign in.</Text>
+            )}
         </View>
     );
 };
@@ -33,7 +42,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: 'white'
+        backgroundColor: "white",
+    },
+    welcomeText: {
+        marginTop: 20,
+        fontSize: 18,
     },
 });
 

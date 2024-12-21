@@ -5,16 +5,16 @@ import { StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot, useRecoilValue } from 'recoil';
 import AccountScreen from './screens/main/account/AccountScreen';
-import { userAtom } from './screens/main/atoms/userAtom';
+import { UserAtom } from './screens/main/atoms/UserAtom';
 import BookDescription from './screens/main/home/bookDescription/BookDescription';
 import MainScreen from './screens/main/MainScreen';
 import { RootStackParamList } from './screens/main/types/RootStackParamList';
-import SignInScreen from './screens/signInScreen/signInScreen';
+import SignInScreen from './screens/signInScreen/SignInScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 function Navigation() {
-  const user = useRecoilValue(userAtom);
+  const user = useRecoilValue(UserAtom);
   console.log("MainScreen", user);
   return (
     <NavigationContainer>
