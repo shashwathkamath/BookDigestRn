@@ -16,7 +16,8 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 function Navigation() {
   const user = useRecoilValue(UserAtom);
-  console.log("MainScreen", user);
+  console.log("MainScreen", user?.name);
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
