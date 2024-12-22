@@ -1,11 +1,12 @@
-import { GOOGLE_CLIENT_ID } from '@env';
+import { GOOGLE_CLIENT_ID } from "@env";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import React, { useEffect } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { useEffect } from "react";
+import { Button, StyleSheet, View } from "react-native";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { UserAtom } from '../main/atoms/UserAtom';
-import { signInSelector } from "../main/atoms/UserSelectors";
-import { signInWithGoogle } from "./SignInWithGoogle";
+import { UserAtom } from "../atoms/userAtom";
+import { signInSelector } from "../atoms/userSelectors";
+import { signInWithGoogle } from "../SignInWithGoogle";
+
 
 const SignInScreen: React.FC = () => {
     const [user, setUser] = useRecoilState(UserAtom); // Update directly using the atom
@@ -28,11 +29,6 @@ const SignInScreen: React.FC = () => {
     return (
         <View style={styles.container}>
             <Button title="Sign in with Google" onPress={handleSignIn} />
-            {currentUser ? (
-                <Text style={styles.welcomeText}>Welcome, {currentUser.name}!</Text>
-            ) : (
-                <Text style={styles.welcomeText}>Please sign in.</Text>
-            )}
         </View>
     );
 };

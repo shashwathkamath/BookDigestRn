@@ -1,6 +1,6 @@
 import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin";
 import { SetterOrUpdater } from "recoil";
-import { User } from "../main/types/User";
+import { User } from "./types/User";
 
 export const signInWithGoogle = async (
     setUser: SetterOrUpdater<User | null>
