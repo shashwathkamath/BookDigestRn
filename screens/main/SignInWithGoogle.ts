@@ -22,7 +22,7 @@ export const signInWithGoogle = async (
 
             // (Optional) Send user details to your backend here
             // await axios.post('your-api-endpoint', userDetails);
-
+            console.log("Inside signInWithGoogle -->", userDetails);
             // Update the user state
             setUser(userDetails);
         } else {
