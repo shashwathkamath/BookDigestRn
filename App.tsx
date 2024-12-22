@@ -1,15 +1,16 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { RecoilRoot, useRecoilValue } from 'recoil';
-import AccountScreen from './screens/main/account/AccountScreen';
-import { UserAtom } from './screens/main/atoms/UserAtom';
-import BookDescription from './screens/main/home/bookDescription/BookDescription';
-import MainScreen from './screens/main/MainScreen';
-import { RootStackParamList } from './screens/main/types/RootStackParamList';
-import SignInScreen from './screens/signInScreen/SignInScreen';
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import React from "react";
+import { StyleSheet } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { RecoilRoot, useRecoilValue } from "recoil";
+import AccountScreen from "./screens/main/account/AccountScreen";
+import { UserAtom } from "./screens/main/atoms/userAtom";
+import BookDescription from "./screens/main/home/bookDescription/BookDescription";
+import MainScreen from "./screens/main/MainScreen";
+import SignInScreen from "./screens/main/signIn/SignInScreen";
+import { RootStackParamList } from "./screens/main/types/RootStackParamList";
+
 
 const Stack = createStackNavigator<RootStackParamList>();
 
