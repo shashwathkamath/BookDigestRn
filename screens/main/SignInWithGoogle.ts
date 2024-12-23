@@ -1,4 +1,5 @@
 import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin";
+import axios from "axios";
 import { SetterOrUpdater } from "recoil";
 import { User } from "./types/User";
 
@@ -8,22 +9,26 @@ export const signInWithGoogle = async (
     try {
         await GoogleSignin.hasPlayServices(); // Ensure Google Play Services are available
         const result = await GoogleSignin.signIn(); // Trigger Google Sign-In
-        const user = result.data?.user;
-
-        if (user && user.id && user.email) {
+        const userInfo = result.data?.user;
+        const baseUrl = "https://9bbb-2600-1001-a00c-b48b-65c0-ce86-a1ad-393f.ngrok-free.app/"
+        if (userInfo && userInfo.id && userInfo.email) {
             const userDetails: User = {
-                photo: user.photo ?? undefined,
-                givenName: user.givenName ?? "",
-                familyName: user.familyName ?? "",
-                name: user.name ?? "",
-                email: user.email,
-                id: user.id,
+                photo: userInfo.photo ?? undefined,
+                givenName: userInfo.givenName ?? "",
+                familyName: userInfo.familyName ?? "",
+                name: userInfo.name ?? "",
+                email: userInfo.email,
+                id: userInfo.id,
             };
 
-            // (Optional) Send user details to your backend here
-            // await axios.post('your-api-endpoint', userDetails);
-            console.log("Inside signInWithGoogle -->", userDetails);
-            // Update the user state
+            const response = await axios.post(
+                baseUrl + "users",
+                userDetails
+            );
+
+            console.log("User successfully sent to backend:", response.data);
+
+            // Update user state
             setUser(userDetails);
         } else {
             throw new Error("Incomplete user data received from Google.");
@@ -41,10 +46,10 @@ export const signInWithGoogle = async (
                     console.log("Google Play Services are not available.");
                     break;
                 default:
-                    console.error("An unexpected error occurred during sign-in: ", error.message);
+                    console.error("Unexpected error during sign-in:", error.message);
             }
         } else {
-            console.error("Unknown error occurred: ", error);
+            console.error("Unknown error during sign-in:", error);
         }
 
         // Reset user state on error
