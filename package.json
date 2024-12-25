@@ -16,6 +16,7 @@
     "pup": "cd ios && pod install --repo-update"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^2.1.0",
     "@react-native-firebase/app": "^21.0.0",
     "@react-native-google-signin/google-signin": "^13.1.0",
     "@react-native-picker/picker": "react-native-picker/picker",

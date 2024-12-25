@@ -10,7 +10,7 @@ export const signInWithGoogle = async (
         await GoogleSignin.hasPlayServices(); // Ensure Google Play Services are available
         const result = await GoogleSignin.signIn(); // Trigger Google Sign-In
         const userInfo = result.data?.user;
-        const baseUrl = "https://9bbb-2600-1001-a00c-b48b-65c0-ce86-a1ad-393f.ngrok-free.app/"
+        const baseUrl = " https://1f8c-2600-1001-a00c-b48b-25bc-6c87-dc88-57a1.ngrok-free.app"
         if (userInfo && userInfo.id && userInfo.email) {
             const userDetails: User = {
                 photo: userInfo.photo ?? undefined,
@@ -22,11 +22,17 @@ export const signInWithGoogle = async (
             };
 
             const response = await axios.post(
-                baseUrl + "users",
+                baseUrl + "/users",
                 userDetails
             );
 
             console.log("User successfully sent to backend:", response.data);
+            // try {
+            //     await saveUserToStorage(userDetails);
+            // }
+            // catch (e: any) {
+            //     console.log("Exception in storing user details", e);
+            // }
 
             // Update user state
             setUser(userDetails);
