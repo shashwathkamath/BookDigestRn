@@ -2,6 +2,7 @@ import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-si
 import axios from "axios";
 import { SetterOrUpdater } from "recoil";
 import { User } from "./types/User";
+import { storeUserData } from "./utils/StorageUtils";
 
 export const signInWithGoogle = async (
     setUser: SetterOrUpdater<User | null>
@@ -10,7 +11,7 @@ export const signInWithGoogle = async (
         await GoogleSignin.hasPlayServices(); // Ensure Google Play Services are available
         const result = await GoogleSignin.signIn(); // Trigger Google Sign-In
         const userInfo = result.data?.user;
-        const baseUrl = "https://9bbb-2600-1001-a00c-b48b-65c0-ce86-a1ad-393f.ngrok-free.app/"
+        const baseUrl = "https://bd41-2600-1001-a00c-b48b-e1ec-c189-7ffa-9164.ngrok-free.app"
         if (userInfo && userInfo.id && userInfo.email) {
             const userDetails: User = {
                 photo: userInfo.photo ?? undefined,
@@ -22,13 +23,12 @@ export const signInWithGoogle = async (
             };
 
             const response = await axios.post(
-                baseUrl + "users",
+                baseUrl + "/users",
                 userDetails
             );
 
             console.log("User successfully sent to backend:", response.data);
-
-            // Update user state
+            await storeUserData(userDetails);
             setUser(userDetails);
         } else {
             throw new Error("Incomplete user data received from Google.");
