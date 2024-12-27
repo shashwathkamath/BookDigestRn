@@ -1,15 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { getUserData } from '../utils/StorageUtils';
 
 const AccountScreen = () => {
-    const [name, setName] = useState('John Doe');
-    const [email, setEmail] = useState('johndoe@example.com');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
     const [contactNumber, setContactNumber] = useState('123-456-7890');
     const [address, setAddress] = useState('123 Main St, Springfield');
     const [paymentMode, setPaymentMode] = useState('PayPal');
     const [booksSold, setBooksSold] = useState(23);
     const [totalEarnings, setTotalEarnings] = useState('$1,250');
-    const [profilePic, setProfilePic] = useState(''); // Add state for profile picture URL
+    const [profilePic, setProfilePic] = useState<any>(null);
+
+    useEffect(() => {
+        loadProfileData();
+    }, []);
+
+    const loadProfileData = async () => {
+        try {
+            const savedProfile = await getUserData();
+            if (savedProfile) {
+                setName(savedProfile.name);
+                setEmail(savedProfile.email);
+                setProfilePic(savedProfile.photo)
+            }
+        } catch (error) {
+            console.error('Error loading profile:', error);
+        }
+    };
 
     return (
         <ScrollView style={styles.container}>
