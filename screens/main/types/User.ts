@@ -5,4 +5,9 @@ export type User = {
     name: string; // Full name of the user
     email: string; // User's email address (can be empty)
     id: string; // User's unique identifier
+    contactNumber?: string;
+    address?: string;
+    paymentMode?: string;
+    booksSold?: number;
+    totalEarnings?: string;
 };
