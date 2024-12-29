@@ -5,11 +5,11 @@ import { getUserData } from '../utils/StorageUtils';
 const AccountScreen = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [contactNumber, setContactNumber] = useState('123-456-7890');
-    const [address, setAddress] = useState('123 Main St, Springfield');
-    const [paymentMode, setPaymentMode] = useState('PayPal');
-    const [booksSold, setBooksSold] = useState(23);
-    const [totalEarnings, setTotalEarnings] = useState('$1,250');
+    const [contactNumber, setContactNumber] = useState('Add Phone Number');
+    const [address, setAddress] = useState('Set Address');
+    const [paymentMode, setPaymentMode] = useState('');
+    const [booksSold, setBooksSold] = useState(0);
+    const [totalEarnings, setTotalEarnings] = useState('$0');
     const [profilePic, setProfilePic] = useState<any>(null);
 
     useEffect(() => {

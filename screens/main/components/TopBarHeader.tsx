@@ -2,11 +2,13 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useRef, useState } from 'react';
 import { Animated, Image, Keyboard, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { RootStackParamList } from '../../../App';
+import { useRecoilValue } from 'recoil';
+import { UserAtom } from '../atoms/userAtom';
+import { RootStackParamList } from '../types/RootStackParamList';
 
 // Importing the image
 const beeImage = require('../../assets/images/image.png');
-const profileImage = require('../../assets/images/pp.png');
+const defaultImage = require('../../assets/images/pp.png');
 type navigationProp = NavigationProp<RootStackParamList, 'Main'>;
 
 const TopBarHeader = () => {
@@ -14,6 +16,7 @@ const TopBarHeader = () => {
     const [searchQuery, setSearchQuery] = useState(''); // State to hold search query
     const searchWidth = useRef(new Animated.Value(0)).current;
     const navigation = useNavigation<navigationProp>();
+    const user = useRecoilValue(UserAtom);
 
     const handleSearchPress = () => {
         if (isSearchActive) {
@@ -80,7 +83,7 @@ const TopBarHeader = () => {
                         onPress={() => navigation.navigate('Account')}
                     >
                         <Image
-                            source={profileImage} // Replace with your image URL
+                            source={user?.photo ? { uri: user.photo } : defaultImage} // Replace with your image URL
                             style={styles.image}
                         />
                     </TouchableOpacity>
