@@ -8,10 +8,11 @@ const HomeScreen = () => {
     const [books, setBooks] = useState<Book[]>([]);
     const [loading, setLoading] = useState(true);
     const navigation = useNavigation<NavigationProp>();
-    const BASE_URL = 'https://bf3c-2600-1001-a00c-b48b-65c0-ce86-a1ad-393f.ngrok-free.app';
+    const BASE_URL = 'https://book-digest-api.vercel.app';
 
     const fetchBooks = async () => {
         try {
+            console.log("BASE URL -->", BASE_URL + '/books');
             const response = await fetch(`${BASE_URL}/books`);
             const data = await response.json();
             setBooks(data);
