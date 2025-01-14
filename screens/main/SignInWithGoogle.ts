@@ -2,7 +2,7 @@ import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-si
 import axios from "axios";
 import { SetterOrUpdater } from "recoil";
 import { User } from "./types/User";
-import { storeUserData } from "./utils/StorageUtils";
+import { saveUserData } from "./utils/StorageUtils";
 
 export const signInWithGoogle = async (
     setUser: SetterOrUpdater<User | null>
@@ -28,7 +28,7 @@ export const signInWithGoogle = async (
             );
 
             console.log("User successfully sent to backend:", response.data);
-            await storeUserData(userDetails);
+            await saveUserData(userDetails);
             setUser(userDetails);
         } else {
             throw new Error("Incomplete user data received from Google.");

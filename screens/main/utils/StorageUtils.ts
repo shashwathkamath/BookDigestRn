@@ -4,7 +4,7 @@ import { User } from '../types/User';
 
 const USER_STORAGE_KEY = '@user_info';
 
-export const storeUserData = async (userData: User): Promise<void> => {
+export const saveUserData = async (userData: User): Promise<void> => {
     try {
         await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
     } catch (error) {

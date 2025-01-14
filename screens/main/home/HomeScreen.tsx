@@ -1,3 +1,4 @@
+import { BASE_URL } from "@env";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from "react-native";
@@ -8,15 +9,12 @@ const HomeScreen = () => {
     const [books, setBooks] = useState<Book[]>([]);
     const [loading, setLoading] = useState(true);
     const navigation = useNavigation<NavigationProp>();
-    const BASE_URL = 'https://book-digest-api.vercel.app';
 
     const fetchBooks = async () => {
         try {
-            console.log("BASE URL -->", BASE_URL + '/books');
             const response = await fetch(`${BASE_URL}/books`);
             const data = await response.json();
             setBooks(data);
-            console.log("Data ---> ", data);
         } catch (error) {
             console.error('Error fetching books:', error);
         } finally {
