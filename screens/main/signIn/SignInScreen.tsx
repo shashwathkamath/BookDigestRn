@@ -8,10 +8,10 @@ import { signInWithGoogle } from "../SignInWithGoogle";
 
 
 const SignInScreen: React.FC = () => {
-    const [user, setUser] = useRecoilState(UserAtom); // Update directly using the atom
+    const [user, setUser] = useRecoilState(UserAtom);
     useEffect(() => {
         GoogleSignin.configure({
-            webClientId: GOOGLE_CLIENT_ID, // Update with your Web Client ID
+            webClientId: GOOGLE_CLIENT_ID,
         });
     }, []);
 
