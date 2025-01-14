@@ -36,10 +36,13 @@ const AccountScreen = () => {
             if (savedProfile) {
                 setName(savedProfile.name || '');
                 setEmail(savedProfile.email || '');
-                setContactNumber(savedProfile.contactNumber || '');
-                setAddress(savedProfile.address || '');
                 setProfilePic(savedProfile.photo || null);
             }
+            const response = await axios.get(`${BASE_URL}/users/${savedProfile?.id}`);
+            const userData = response.data.user;
+            setContactNumber(userData.contactNumber || '');
+            setAddress(userData.address || '');
+            console.log('User data:', userData);
         } catch (error) {
             Alert.alert('Error', 'Failed to load profile data.');
             console.error('Error loading profile:', error);
